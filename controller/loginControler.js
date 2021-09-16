@@ -1,7 +1,7 @@
 const User = require("../model/user");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
-const cookieParser = require("cookie-parser");
+
 
  const addlogin = async(req,res)=>{
     const { email, password } = req.body;
@@ -13,7 +13,7 @@ const cookieParser = require("cookie-parser");
  
 	    res.cookie("jwt", token, { httpOnly: true, secure: false });
 
-        res.json("User match", passwordValid)
+        res.json({massage:"user match"})
     } catch (error) {
       
 

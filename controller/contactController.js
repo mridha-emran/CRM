@@ -1,12 +1,22 @@
 const Contact= require("../model/contact")
 
 
-const getContact=async (_req,res)=>{
-    const contacts=await Contact.find().populate("userId")
+const getContact=async (req,res)=>{
+  const query = req.query;
+  const userId = req.cookies.jwtData.id
+  const objecjKey = Object.keys(query)[0];
+  const objectValue= Object.values(query)[0];
+  const contacts = await Contact.find({ userId: userId }).populate('userId');
+  const findContacts = await Contact.find ({[objecjKey]:[objectValue]})
+
+
+   console.log(objecjKey)
+   console.log(findContacts)
+
     res.json({
 		status: "OK",
 		message:"data send",
-        data: contacts
+        data: findContacts
 	});
 
 }
@@ -23,22 +33,40 @@ const addContact=async (req,res)=>{
 const changeContact=async(req,res)=>{
 
           const contactID = req.params.id
-        const contactQuery=req.query.name
-          await Contact.findOneAndUpdate( {_id:contactID},
-            { $set: { name: contactQuery } })
+          const { userId, name, email, description, category } = req.body;
+          try{
+          await Contact.findOneAndUpdate( contactID, { userId, name, email, description, category })
+            
             res.json({
                 message: "contact updated"
             })
-
-    
- 
+          }
+          catch (err) {
+            return res.status(400).json({
+              message: " user created",
+            });}
      
 }
+
+const deleteContact=async(req,res)=>{
+  const contactID=req.params.id
+  const removecontact=await Contact.deleteOne({_id:contactID})
+  if(Contact){
+      res.json({
+          status:"ok",
+          message:"data update",
+          data: removecontact
+      })
+  }
+}
+
+
 
 module.exports ={
     getContact,
     addContact,
-    changeContact
+    changeContact,
+    deleteContact
    
     
 }

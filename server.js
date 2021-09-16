@@ -5,10 +5,12 @@ const mongoose=require("mongoose")
 const router=require("./Router/contactRouter")
 const registerRouter=require("./Router/registerRouter")
 const loginRouter=require("./Router/loginRouter")
+const cookieParser = require("cookie-parser");
 dotenv.config({
     path:"./config.env"
 })
 app.use(express.json())
+app.use(cookieParser());
 
 mongoose.connect(process.env.DB,{useNewUrlParser:true,}).then(()=>{
     console.log("connected to mongoDB!")
