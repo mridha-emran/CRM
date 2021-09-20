@@ -6,18 +6,26 @@ const getContact=async (req,res)=>{
   const userId = req.cookies.jwtData.id
   const objecjKey = Object.keys(query)[0];
   const objectValue= Object.values(query)[0];
-  const contacts = await Contact.find({ userId: userId }).populate('userId');
-  const findContacts = await Contact.find ({[objecjKey]:[objectValue]})
-
-
-   console.log(objecjKey)
-   console.log(findContacts)
-
-    res.json({
+  
+  try{
+    const contacts = await Contact.find({ userId: userId }).populate('userId');
+    const findContacts = await Contact.find ({[objecjKey]:[objectValue]})
+  if(findContacts){
+    res.status(201).json({
+      message: "Founding match",
+      data: contacts,
+    })}
+  else{
+    res.status(200)({
 		status: "OK",
 		message:"data send",
         data: findContacts
-	});
+	});}
+}
+catch (err) {
+  res.status(404).json({
+    message: err,
+  });}
 
 }
 

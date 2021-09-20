@@ -11,7 +11,7 @@ const jwt = require("jsonwebtoken");
         const passwordValid = await bcrypt.compare(password, user.password);
         const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET);
  
-	    res.cookie("jwt", token, { httpOnly: true, secure: false });
+	    res.cookie("jwt", token, { httpOnly: true, secure: false },{expires:new Date(Date.now()+6000)});
 
         res.json({massage:"user match"})
     } catch (error) {
